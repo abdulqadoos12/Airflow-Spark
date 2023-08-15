@@ -1,0 +1,8 @@
+lxml
+python-decouple
+requests
+pandas
+numpy
+pyyaml
+pyinstaller
+py4j

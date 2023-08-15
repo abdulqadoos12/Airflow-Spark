@@ -2,7 +2,7 @@ version: '2'
 
 services:
   spark:
-    image: spark-air:latest
+    image: spark:latest
     environment:
       - SPARK_MODE=master
       - SPARK_RPC_AUTHENTICATION_ENABLED=no
@@ -16,7 +16,7 @@ services:
     ports:
       - '8090:8080'
   spark-worker:
-    image: spark-air:latest
+    image: spark:latest
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark:7077

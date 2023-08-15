@@ -3,29 +3,33 @@ FROM bitnami/spark:3.3.2
 USER root
 
 ENV SPARK_MASTER_PORT=7077 \
-SPARK_HOME=/opt/bitnami/spark \
-PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin \
-SPARK_LOG_DIR=/opt/spark/logs \
-SPARK_MASTER_LOG=/opt/spark/logs/spark-master.out \
-SPARK_WORKER_LOG=/opt/spark/logs/spark-worker.out \
-SPARK_WORKER_PORT=7000 \
-SPARK_MASTER="spark://spark-master:7077" \
-SPARK_WORKLOAD="master"
+    SPARK_HOME=/opt/bitnami/spark \
+    PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin \
+    SPARK_LOG_DIR=/opt/spark/logs \
+    SPARK_MASTER_LOG=/opt/spark/logs/spark-master.out \
+    SPARK_WORKER_LOG=/opt/spark/logs/spark-worker.out \
+    SPARK_WORKER_PORT=7000 \
+    SPARK_MASTER="spark://spark-master:7077" \
+    SPARK_WORKLOAD="master"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       sudo \
       curl \
       vim \
+      git \
       unzip \
       rsync \
-      openjdk-11-jdk \
+      gnupg \
+      make \
+      zlib1g \
+      wget \
+      zlib1g-dev \
       build-essential \
       software-properties-common \
       ssh && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
 
 RUN export SPARK_HOME
 RUN export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
@@ -36,11 +40,7 @@ RUN echo 'export SPARK_HOME="/opt/bitnami/spark"' >> /etc/environment
 
 EXPOSE 8090 7077 6066 8080
 
-
-
-
 COPY ./dags/spark_etl_script_docker.py /opt/bitnami/spark
-
 
 RUN mkdir -p $SPARK_LOG_DIR && \
 touch $SPARK_MASTER_LOG && \
@@ -48,6 +48,22 @@ touch $SPARK_WORKER_LOG && \
 ln -sf /dev/stdout $SPARK_MASTER_LOG && \
 ln -sf /dev/stdout $SPARK_WORKER_LOG
 
-COPY ./requirements_copy.txt /
-RUN pip install python==3.10.12
-RUN pip install -r /requirements_copy.txt
+COPY ./requirements_spark.txt /
+
+RUN wget https://www.python.org/ftp/python/3.10.12/Python-3.10.12.tar.xz
+
+RUN tar -Jxvf Python-3.10.12.tar.xz
+
+RUN chmod +X /opt/bitnami/spark/Python-3.10.12/configure
+
+RUN cd /opt/bitnami/spark/Python-3.10.12 
+
+RUN /opt/bitnami/spark/Python-3.10.12/configure --enable-optimizations && make altinstall
+
+RUN mv /usr/local/bin/python3.10 /usr/local/bin/python3
+
+RUN cp /usr/local/bin/python3 /usr/local/bin/python
+
+RUN export PATH=/opt/bitnami/java/bin:/opt/bitnami/spark/bin:/opt/bitnami/spark/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bitnami/spark/bin:/opt/bitnami/spark/sbin
+
+RUN pip3 install -r /requirements_spark.txt
