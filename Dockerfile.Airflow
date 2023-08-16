@@ -3,11 +3,9 @@ USER root
 
 # Install OpenJDK-11
 RUN apt-get update && \
-    # rmdir /etc/ssl/certs/java && \
     mkdir /etc/ssl/certs/java && \
     apt-get install -y ca-certificates && \
     apt-get install -y --reinstall -o Dpkg::Options::="--force-confask,confnew,confmiss" --reinstall ca-certificates-java ssl-cert openssl ca-certificates && \
-#    apt-get install -y ca-certificates-java openjdk-17-jre-headless && \
     apt-get install -y openjdk-17-jdk && \
     apt-get install -y build-essential && \
     apt-get install -y binutils && \

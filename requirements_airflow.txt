@@ -5,6 +5,7 @@ requests
 pandas
 numpy
 pyyaml
+py4j
 pyinstaller
 apache-airflow-providers-odbc
 apache-airflow-providers-microsoft-mssql
@@ -16,3 +17,4 @@ oracledb
 apache-airflow-providers-oracle
 mysqlclient
 apache-airflow-providers-mysql
+pyspark==3.3.2

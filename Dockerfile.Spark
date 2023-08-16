@@ -44,7 +44,7 @@ RUN echo 'export SPARK_HOME="/opt/bitnami/spark"' >> /etc/environment
 
 EXPOSE 8090 7077 6066 8080
 
-COPY ./dags/spark_etl_script_docker.py /opt/bitnami/spark
+COPY ./dags/test_script.py /opt/bitnami/spark
 
 RUN mkdir -p $SPARK_LOG_DIR && \
 touch $SPARK_MASTER_LOG && \
