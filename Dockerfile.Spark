@@ -10,7 +10,9 @@ ENV SPARK_MASTER_PORT=7077 \
     SPARK_WORKER_LOG=/opt/spark/logs/spark-worker.out \
     SPARK_WORKER_PORT=7000 \
     SPARK_MASTER="spark://spark-master:7077" \
-    SPARK_WORKLOAD="master"
+    SPARK_WORKLOAD="master" \
+    LD_LIBRARY_PATH="/usr/local/lib" \ 
+    PYTHONPATH="/usr/local/bin:$PYTHONPATH"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -21,6 +23,8 @@ RUN apt-get update && \
       unzip \
       rsync \
       gnupg \
+      dirmngr \
+      gpg \
       make \
       zlib1g \
       wget \
@@ -50,20 +54,23 @@ ln -sf /dev/stdout $SPARK_WORKER_LOG
 
 COPY ./requirements_spark.txt /
 
-RUN wget https://www.python.org/ftp/python/3.10.12/Python-3.10.12.tar.xz
+RUN gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BA6932366A755776
 
-RUN tar -Jxvf Python-3.10.12.tar.xz
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BA6932366A755776
 
-RUN chmod +X /opt/bitnami/spark/Python-3.10.12/configure
+RUN echo "deb http://ppa.launchpad.net/deadsnakes/ppa/ubuntu focal main" > /etc/apt/sources.list.d/deadsnakes.list
 
-RUN cd /opt/bitnami/spark/Python-3.10.12 
+RUN apt-get update && \
+    apt-get install -y python3.10 python3.10-dev python3-distutils python3-pip
 
-RUN /opt/bitnami/spark/Python-3.10.12/configure --enable-optimizations && make altinstall
+RUN cp /usr/bin/python3.10 /opt/bitnami/python/bin/python3
 
-RUN mv /usr/local/bin/python3.10 /usr/local/bin/python3
+RUN cp /usr/bin/python3.10 /opt/bitnami/python/bin/python
 
-RUN cp /usr/local/bin/python3 /usr/local/bin/python
+RUN cp /usr/bin/pip3 /opt/bitnami/python/bin/pip3
 
-RUN export PATH=/opt/bitnami/java/bin:/opt/bitnami/spark/bin:/opt/bitnami/spark/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bitnami/spark/bin:/opt/bitnami/spark/sbin
+RUN cp /usr/bin/pip /opt/bitnami/python/bin/pip
+
+RUN cp /usr/bin/pip /usr/lib/python3/dist-packages/pip
 
 RUN pip3 install -r /requirements_spark.txt
