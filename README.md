@@ -1,10 +1,18 @@
 # Airflow and Spark: Running Spark jobs on Airflow (Docker-based solution)
 
-Here in this repository, we have designed a simple ETL process that extract data from an API and we are transforming this data using Spark and loading this data into an AWS S3 bucket. We running this batch processes using Airflow by Spark job submit Operator in Airflow. All the processes described here are happening on a Docker containers. You can look at this [repository](https://github.com/yTek01/apache-airflow-spark) if you are interested in local deployment as opposed to Docker-based solution. 
+In this repository, we've developed a Docker-based environment tailored for executing scheduled Spark jobs via Airflow. This approach addresses various development-related challenges, such as environmental discrepancies, missing dependencies, portability, and compactness. Consequently, this accelerates development and facilitates seamless deployment to production.
 
-![alt text](https://github.com/yTek01/docker-spark-airflow/blob/main/images/index.png)
+Several merits accompany the adoption of Docker containers to execute Spark jobs:
 
-## Things to do;
+Enhanced Collaboration: Dockerization allows hassle-free sharing of development environments with colleagues, ensuring that all necessary dependencies are bundled.
+
+Platform Agnostic Deployment: Docker enables you to construct and deploy your solutions across diverse cloud platforms like AWS, Azure, GCP, ensuring consistent outcomes.
+
+Optimal Isolation: Docker empowers you to package distinct applications on the same machine—such as Spark, Kafka, and Airflow—ensuring they work harmoniously despite varying dependencies. This isolation safeguards against compatibility issues.
+
+Resource Efficiency: By leveraging Docker containers, you can manage resource allocation more efficiently, aggregating RAM and CPU according to the demands of different applications.
+
+To effectively utilize this environment, follow these steps:
 
 *  Clone the Github repository 
 *  Build the Spark and the Airflow image
