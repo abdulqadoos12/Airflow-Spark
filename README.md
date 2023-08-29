@@ -67,3 +67,6 @@ docker exec -it <Spark-Worker-Contianer-name> \
 ```
 
 If all is fine with the setup, i.e. the Spark job completed successfully, then move forward to scheduling the Spark job on Airflow. 
+
+## Requirement.txt files (How to add missing libraries)
+We've included two essential files, namely "requirements_airflow.txt" and "requirements_spark.txt," within our setup. These files list the necessary Python libraries and Airflow providers required for seamless operation. If you find yourself needing additional libraries or specific Airflow providers that are not currently listed, the solution is straightforward. You just need to include the desired library or provider in the corresponding "requirements.txt" file. Afterward, you can proceed to build and execute the container. This approach ensures that your environment remains tailored to your evolving needs, all while maintaining the simplicity and efficiency of the process.
